@@ -6,14 +6,25 @@ workflows:
       flutter: stable
       java: 17
     scripts:
-      - name: Create Flutter project structure
+      - name: Setup project
         script: |
-          flutter create --project-name locallens \
-            --org com.locallens \
-            --platforms android .
+          # Mevcut kodları yedekle
+          cp -r lib /tmp/lib_backup
+          cp pubspec.yaml /tmp/pubspec_backup.yaml
+          
+          # Flutter proje yapısını oluştur
+          flutter create --project-name locallens --org com.locallens .
+          
+          # Bizim kodlarımızı geri yükle
+          rm -rf lib
+          cp -r /tmp/lib_backup lib
+          cp /tmp/pubspec_backup.yaml pubspec.yaml
+          
       - name: Get packages
         script: flutter pub get
+        
       - name: Build APK
         script: flutter build apk --release
+        
     artifacts:
       - build/**/outputs/**/*.apk
