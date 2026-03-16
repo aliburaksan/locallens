@@ -6,6 +6,11 @@ workflows:
       flutter: stable
       java: 17
     scripts:
+      - name: Create Flutter project structure
+        script: |
+          flutter create --project-name locallens \
+            --org com.locallens \
+            --platforms android .
       - name: Get packages
         script: flutter pub get
       - name: Build APK
