@@ -6,31 +6,17 @@ workflows:
       flutter: stable
       java: 17
     scripts:
-      - name: Setup project
-        script: |
-          # Mevcut kodları yedekle
-          cp -r lib /tmp/lib_backup
-          cp pubspec.yaml /tmp/pubspec_backup.yaml
-
-          # Geçici klasörde temiz proje oluştur
-          cd /tmp
-          flutter create --project-name locallens --org com.locallens tempproject
-
-          # android klasörünü repoya kopyala
-          cp -r /tmp/tempproject/android $CM_BUILD_DIR/android
-          cp -r /tmp/tempproject/ios $CM_BUILD_DIR/ios
-
-          # Orijinal kodları geri yükle
-          cd $CM_BUILD_DIR
-          rm -rf lib
-          cp -r /tmp/lib_backup lib
-          cp /tmp/pubspec_backup.yaml pubspec.yaml
-
       - name: Get packages
         script: flutter pub get
-
       - name: Build APK
-        script: flutter build apk --release
-
+        script: flutter build apk --release --no-tree-shake-icons
     artifacts:
       - build/**/outputs/**/*.apk
+      - build/**/outputs/**/mapping.txt
+    publishing:
+      email:
+        recipients:
+          - your@email.com
+        notify:
+          success: true
+          failure: true
