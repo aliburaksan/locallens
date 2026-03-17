@@ -6,65 +6,28 @@ class TranslationService {
   factory TranslationService() => _instance;
   TranslationService._internal();
 
-  // Public LibreTranslate instances - fallback sırasıyla dener
-  static const _endpoints = [
-    'https://libretranslate.com',
-    'https://translate.argosopentech.com',
-    'https://libretranslate.de',
-  ];
-
   Future<String> translate({
     required String text,
     required String from,
     required String to,
   }) async {
     if (text.trim().isEmpty) return text;
-
-    for (final endpoint in _endpoints) {
-      try {
-        final result = await _tryTranslate(
-          endpoint: endpoint,
-          text: text,
-          from: from.toLowerCase(),
-          to: to.toLowerCase(),
-        );
-        if (result != null) return result;
-      } catch (_) {
-        continue;
+    try {
+      final uri = Uri.parse(
+        'https://api.mymemory.translated.net/get'
+        '?q=${Uri.encodeComponent(text)}'
+        '&langpair=${from.toLowerCase()}|${to.toLowerCase()}',
+      );
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final translated = data['responseData']['translatedText'] as String?;
+        if (translated != null && translated.isNotEmpty) {
+          return translated;
+        }
       }
-    }
-
-    // Fallback: orijinal metni döndür
+    } catch (_) {}
     return text;
-  }
-
-  Future<String?> _tryTranslate({
-    required String endpoint,
-    required String text,
-    required String from,
-    required String to,
-  }) async {
-    final response = await http
-        .post(
-          Uri.parse('$endpoint/translate'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'q': text,
-            'source': from,
-            'target': to,
-            'format': 'text',
-          }),
-        )
-        .timeout(const Duration(seconds: 10));
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final translated = data['translatedText'] as String?;
-      if (translated != null && translated.isNotEmpty) {
-        return translated;
-      }
-    }
-    return null;
   }
 
   Future<List<String>> translateBatch({
@@ -76,6 +39,8 @@ class TranslationService {
     for (final text in texts) {
       final translated = await translate(text: text, from: from, to: to);
       results.add(translated);
+      // Rate limit için kısa bekleme
+      await Future.delayed(const Duration(milliseconds: 300));
     }
     return results;
   }
