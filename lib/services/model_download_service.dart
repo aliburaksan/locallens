@@ -34,7 +34,7 @@ class ModelDownloadService {
   ModelDownloadService._internal();
 
   static const _baseUrl =
-      'https://huggingface.co/Helsinki-NLP/opus-mt-tr-en/resolve/main';
+      'https://github.com/aliburaksan/locallens/releases/download/v1.0-models';
 
   static const availableModels = [
     ModelInfo(
@@ -44,17 +44,8 @@ class ModelDownloadService {
       targetLang: 'en',
       size: '~520 MB',
       files: [
-        ModelFile(name: 'config.json', url: '$_baseUrl/config.json'),
-        ModelFile(
-            name: 'tokenizer_config.json',
-            url: '$_baseUrl/tokenizer_config.json'),
-        ModelFile(
-            name: 'special_tokens_map.json',
-            url: '$_baseUrl/special_tokens_map.json'),
-        ModelFile(name: 'vocab.json', url: '$_baseUrl/vocab.json'),
-        ModelFile(
-            name: 'generation_config.json',
-            url: '$_baseUrl/generation_config.json'),
+        ModelFile(name: 'decoder_model.onnx', url: '$_baseUrl/decoder_model.onnx'),
+        ModelFile(name: 'encoder_model.onnx', url: '$_baseUrl/encoder_model.onnx'),
         ModelFile(name: 'source.spm', url: '$_baseUrl/source.spm'),
         ModelFile(name: 'target.spm', url: '$_baseUrl/target.spm'),
       ],
