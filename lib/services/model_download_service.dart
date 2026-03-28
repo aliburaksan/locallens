@@ -53,9 +53,12 @@ class ModelDownloadService {
   ];
 
   Future<String> getModelDir(String modelId) async {
-    final appDir = await getApplicationDocumentsDirectory();
-    return '${appDir.path}/models/$modelId';
-  }
+  final appDir = await getExternalStorageDirectory() ?? 
+                 await getApplicationDocumentsDirectory();
+  final dir = '${appDir.path}/LocalLens/models/$modelId';
+  await Directory(dir).create(recursive: true);
+  return dir;
+}
 
   Future<bool> isModelDownloaded(String modelId) async {
     final dir = await getModelDir(modelId);
