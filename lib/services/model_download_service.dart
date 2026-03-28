@@ -45,12 +45,17 @@ class ModelDownloadService {
       targetLang: 'en',
       size: '~520 MB',
       files: [
+<<<<<<< HEAD
         ModelFile(
             name: 'decoder_model.onnx',
             url: '$_baseUrl/decoder_model.onnx'),
         ModelFile(
             name: 'encoder_model.onnx',
             url: '$_baseUrl/encoder_model.onnx'),
+=======
+        ModelFile(name: 'decoder_model.onnx', url: '$_baseUrl/decoder_model.onnx'),
+        ModelFile(name: 'encoder_model.onnx', url: '$_baseUrl/encoder_model.onnx'),
+>>>>>>> 69dd1de4df981552b320974360a160dd9b52c986
         ModelFile(name: 'source.spm', url: '$_baseUrl/source.spm'),
         ModelFile(name: 'target.spm', url: '$_baseUrl/target.spm'),
       ],

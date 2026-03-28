@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
 import 'screens/image_translate_screen.dart';
+import 'screens/models_screen.dart';
 import 'screens/other_screens.dart';
 
 void main() {
